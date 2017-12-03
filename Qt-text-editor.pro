@@ -4,9 +4,11 @@
 #
 #-------------------------------------------------
 
-QT       += core gui
+QT       += core gui \
+            printsupport
 
-CONFIG += c++11
+CONFIG += c++11 \
+          console
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,10 +29,13 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        mainwindow.cpp
+        mainwindow.cpp \
+    codeeditor.cpp
 
 HEADERS += \
-        mainwindow.h
+        mainwindow.h \
+    linenumberarea.h \
+    codeeditor.h
 
 FORMS += \
         mainwindow.ui
