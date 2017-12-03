@@ -5,7 +5,7 @@
 #include <QGridLayout>
 #include <QWidget>
 #include <QTabWidget>
-#include <QSyntaxHighlighter>
+//#include <QSyntaxHighlighter>
 #include <QString>
 #include <QMenu>
 #include <QMessageBox>
@@ -25,6 +25,15 @@
 #include <QAction>
 #include <QToolButton>
 #include <QCloseEvent>
+#include <QDragEnterEvent>
+#include <QDropEvent>
+#include <QMimeData>
+#include <QList>
+#include <QUrl>
+
+#include "linenumberarea.h"
+#include "codeeditor.h"
+#include "highlighter.h"
 
 
 namespace Ui {
@@ -41,6 +50,7 @@ public:
 private:
     Ui::MainWindow *ui;
     QTabWidget* tabs;
+    Highlighter* highlighter;
 
     QDirModel* file_system_model;
     QTreeView* file_system_view;
@@ -49,14 +59,15 @@ private:
     QDockWidget* file_explorer_dock;
     QDockWidget* openned_docs_dock;
 
-    //QGridLayout* mainLayout;
-    //QWidget* mainWidget;
+    void dragEnterEvent(QDragEnterEvent* drag_event) override;
+    void dropEvent(QDropEvent* drop_event) override;
 
     QAction* file_explorer;
     QAction* openned_docs;
 
     void SetupTabWidget();
     void SetupMenuBar();
+    void SetupToolBar();
     void SetupFileExplorerDock();
     void SetupOpennedDocsDock();
     void closeEvent(QCloseEvent*) override;
@@ -83,6 +94,7 @@ private slots:
     void DeleteTabFromList(int);
     void UpdateCurrentIndex(int);
     void UpdateCurrentIndex(QListWidgetItem*);
+    void UpdateCurrentIndexOnDelete(int);
 
     // TODO: Drag'n Drop support! (from another program + from dock)
 };

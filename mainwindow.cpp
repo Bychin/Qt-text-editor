@@ -1,26 +1,39 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "codeeditor.h"
-
-#include <QDebug> //
-
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
+    setAcceptDrops(true);
+    setWindowIcon(QIcon(":/icons/icon.png"));
+    setWindowTitle("Text Editor");
 
     SetupTabWidget();
     SetupFileExplorerDock();
     SetupOpennedDocsDock();
     CreateFile();
     SetupMenuBar();
+    SetupToolBar();
 
     setCentralWidget(tabs);
     tabs->currentWidget()->setFocus();
+    highlighter = new Highlighter(":/highlights/languages.xml", this);
 }
 
 MainWindow::~MainWindow() {
     delete ui;
+}
+
+void MainWindow::dragEnterEvent(QDragEnterEvent* drag_event) {
+    if (drag_event->mimeData()->hasUrls())
+        drag_event->acceptProposedAction();
+}
+
+void MainWindow::dropEvent(QDropEvent* drop_event) {
+    QList<QUrl> url_list = drop_event->mimeData()->urls();
+    foreach (QUrl url, url_list) {
+        OpenFile(url.url(QUrl::RemoveScheme));
+    }
 }
 
 void MainWindow::SetupTabWidget() {
@@ -71,6 +84,13 @@ void MainWindow::SetupMenuBar() {
     ui->menuBar->addMenu(viewMenu);
 }
 
+void MainWindow::SetupToolBar() {
+    ui->mainToolBar->addAction(QIcon(":/icons/new_file.png"),       "Create New File", this, SLOT(CreateFile()));
+    ui->mainToolBar->addAction(QIcon(":/icons/open_file.png"),      "Open File",       this, SLOT(OpenFile()));
+    ui->mainToolBar->addAction(QIcon(":/icons/save_file.png"),      "Save File",       this, SLOT(SaveFile()));
+    ui->mainToolBar->addAction(QIcon(":/icons/save_all_files.png"), "Save All Files",  this, SLOT(SaveAllFiles()));
+}
+
 void MainWindow::SetupFileExplorerDock() {
     file_system_model = new QDirModel;
     file_system_view  = new QTreeView;
@@ -92,13 +112,15 @@ void MainWindow::SetupFileExplorerDock() {
 
 void MainWindow::SetupOpennedDocsDock() {
     openned_docs_widget = new QListWidget;
-    connect(tabs->tabBar(), SIGNAL(tabMoved(int, int)), this, SLOT(ChangeTabIndexInList(int, int)));
-    // + update on openning/creating new file
-    // + update position in list provided by ChangeTabIndexInList(int, int) function;
-    // + delete on deleting tab  provided by DeleteTabFromList(int) function
-    connect(openned_docs_widget, SIGNAL(itemDoubleClicked(QListWidgetItem*)), this, SLOT(UpdateCurrentIndex(QListWidgetItem*)));
-    connect(tabs->tabBar(), SIGNAL(tabBarClicked(int)), this, SLOT(UpdateCurrentIndex(int)));
-    //connect(tabs->tabBar(), SIGNAL(currentChanged(int)), this, SLOT(UpdateCurrentIndex(int))); ????
+
+    // update on openning/creating new file
+    // delete on deleting tab provided by DeleteTabFromList(int) function
+    // update position in list
+    connect(tabs->tabBar(),      SIGNAL(tabMoved(int, int)),            this, SLOT(ChangeTabIndexInList(int, int)));
+    connect(openned_docs_widget, SIGNAL(itemClicked(QListWidgetItem*)), this, SLOT(UpdateCurrentIndex(QListWidgetItem*)));
+    connect(openned_docs_widget, SIGNAL(currentRowChanged(int)),        tabs, SLOT(setCurrentIndex(int)));
+    connect(tabs->tabBar(),      SIGNAL(currentChanged(int)),           this, SLOT(UpdateCurrentIndex(int)));
+    connect(tabs->tabBar(),      SIGNAL(tabCloseRequested(int)),        this, SLOT(UpdateCurrentIndexOnDelete(int)));
 
     openned_docs_dock  = new QDockWidget("Openned files", this);
 
@@ -120,6 +142,8 @@ void MainWindow::CreateFile() {
     new_item->setText(tabs->tabText(index));
     new_item->setToolTip(tabs->tabToolTip(index));
     openned_docs_widget->addItem(new_item);
+
+    UpdateCurrentIndex(index);
 }
 
 void MainWindow::OpenFile() {
@@ -164,6 +188,15 @@ void MainWindow::OpenFile(const QString& filepath) {
         new_item->setText(tabs->tabText(index));
         new_item->setToolTip(tabs->tabToolTip(index));
         openned_docs_widget->addItem(new_item);
+
+        QString file_extension = QFileInfo(filename).suffix(); // setting up highlight
+        if (highlighter->getRequest(file_extension)) {
+            highlighter->setDocument(new_text_edit->document());
+            highlighter->highlightBlock(new_text_edit->toPlainText());
+        }
+
+        tabs->setTabWhatsThis(index, "No changes");
+        UpdateCurrentIndex(index); // setting up selected item in openned_docs_dock
     } else {
         (new QErrorMessage(this))->showMessage("Cannot open file!");
         return;
@@ -214,6 +247,13 @@ void MainWindow::SaveFileAs() {
     filename = filepath.section("/",-1,-1);
     tabs->tabBar()->setTabText(tabs->currentIndex(), filename);
     tabs->tabBar()->setTabToolTip(tabs->currentIndex(), filepath);
+
+    QString file_extension = QFileInfo(filename).suffix(); // setting up highlight
+    if (highlighter->getRequest(file_extension)) {
+        highlighter->setDocument(((CodeEditor*)tabs->currentWidget())->document()); // unsafe getting!
+        highlighter->highlightBlock(((CodeEditor*)tabs->currentWidget())->toPlainText()); // unsafe getting!
+    }
+
     tabs->setTabWhatsThis(tabs->currentIndex(), "No changes");
 }
 
@@ -283,6 +323,15 @@ void MainWindow::closeEvent(QCloseEvent*) {
 }
 
 void::MainWindow::UpdateParameter() {
+    // highlight bad support (always changed)
+    QString file = tabs->tabBar()->tabText(tabs->currentIndex());
+    QString file_extension = QFileInfo(file).suffix();
+    if (!file_extension.isEmpty()) {
+        if (highlighter->getRequest(file_extension)) {
+            tabs->setTabWhatsThis(tabs->currentIndex(), "Changed");
+            return;
+        }
+    }
     tabs->setTabWhatsThis(tabs->currentIndex(), "Changed");
     disconnect(sender(), SIGNAL(textChanged()), this, SLOT(UpdateParameter()));
 }
@@ -322,7 +371,20 @@ void MainWindow::UpdateCurrentIndex(QListWidgetItem* current_item) {
 }
 
 void MainWindow::UpdateCurrentIndex(int new_selection_index) {
-    if (!openned_docs_widget->selectedItems().empty())
-        openned_docs_widget->selectedItems().at(0)->setSelected(false);
-    openned_docs_widget->item(new_selection_index)->setSelected(true);
+    openned_docs_widget->setCurrentRow(new_selection_index);
+
+    // + highlight update
+    QString file = tabs->tabBar()->tabText(new_selection_index);
+    QString file_extension = QFileInfo(file).suffix();
+    if (!file_extension.isEmpty()) {
+        if (highlighter->getRequest(file_extension)) {
+            highlighter->setDocument(((CodeEditor*)tabs->currentWidget())->document()); // unsafe getting!
+            highlighter->highlightBlock(((CodeEditor*)tabs->currentWidget())->toPlainText()); // unsafe getting!
+        }
+    }
+}
+
+void MainWindow::UpdateCurrentIndexOnDelete(int) { // should be better?
+    // (Relies on fact that after deletion current tab is always (count() - 1)th tab)
+    openned_docs_widget->setCurrentRow(openned_docs_widget->count() - 1);
 }

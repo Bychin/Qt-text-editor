@@ -5,14 +5,14 @@
 #-------------------------------------------------
 
 QT       += core gui \
-            printsupport
+            printsupport \
+            xml
 
-CONFIG += c++11 \
-          console
+CONFIG += c++11
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = Qt-text-editor
+TARGET   = Qt-text-editor
 TEMPLATE = app
 
 # The following define makes your compiler emit warnings if you use
@@ -30,12 +30,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         mainwindow.cpp \
-    codeeditor.cpp
+        codeeditor.cpp \
+    highlighter.cpp
 
 HEADERS += \
         mainwindow.h \
-    linenumberarea.h \
-    codeeditor.h
+        linenumberarea.h \
+        codeeditor.h \
+    highlighter.h
 
 FORMS += \
         mainwindow.ui
+
+RESOURCES += \
+        resources.qrc

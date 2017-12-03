@@ -1,0 +1,86 @@
+<?xml version="1.0"?>
+<languages>
+	<language extentions="(cpp|h|hpp|py)">
+		<single_comment expression = "//[^\n]*"></single_comment>
+		<multiline_comment begin = "/\*" end = "\*/"></multiline_comment>
+		<keywords>
+			<keyword>char</keyword>
+			<keyword>class</keyword>
+			<keyword>const</keyword>
+			<keyword>double</keyword>
+			<keyword>enum</keyword>
+			<keyword>explicit</keyword>
+			<keyword>friend</keyword>
+			<keyword>inline</keyword>
+			<keyword>int</keyword>
+			<keyword>long</keyword>
+			<keyword>float</keyword>
+			<keyword>namespace</keyword>
+			<keyword>operator</keyword>
+			<keyword>private</keyword>
+			<keyword>protected</keyword>
+			<keyword>public</keyword>
+			<keyword>short</keyword>
+			<keyword>signals</keyword>
+			<keyword>signed</keyword>
+			<keyword>template</keyword>
+			<keyword>typedef</keyword>
+			<keyword>typename</keyword>
+			<keyword>union</keyword>
+			<keyword>unsigned</keyword>
+			<keyword>virtual</keyword>
+			<keyword>void</keyword>
+			<keyword>volatile</keyword>
+			<keyword>break</keyword>
+			<keyword>return</keyword>
+			<keyword>continue</keyword>
+			<keyword>if</keyword>
+			<keyword>else</keyword>
+			<keyword>for</keyword>
+			<keyword>while</keyword>
+			<keyword>true</keyword>
+			<keyword>false</keyword>
+			<keyword>new</keyword>
+			<keyword>delete</keyword>
+			<keyword>free</keyword>
+			<keyword>bool</keyword>
+			<keyword>malloc</keyword>
+			<keyword>calloc</keyword>
+			<command>#define<command>
+			<command>#elif</command>
+			<command>#else</command>
+			<command>#ifndef</command>
+			<command>#error</command>
+			<command>#if</command>
+			<command>#ifdef</command>
+			<command>#pragma</command>
+			<command>#import</command>
+			<command>#include</command>
+			<command>#line</command>
+			<command>#undef</command>
+			<command>#using</command>
+			<command>#endif</command>
+
+			<keyword>class</keyword>
+			<keyword>def</keyword>
+			<keyword>return</keyword>
+			<keyword>True</keyword>
+			<keyword>False</keyword>
+			<command>import<command>
+			<command>from</command>
+		</keywords>
+	</language>
+	<!--<language extentions="(py)">
+		<single_comment expression = "#[^\n]*"></single_comment>
+		<multiline_comment begin = '"""' end = '"""'></multiline_comment>
+		<keywords>
+			<keyword>class</keyword>
+			<keyword>def</keyword>
+			<keyword>return</keyword>
+			<keyword>True</keyword>
+			<keyword>False</keyword>
+			<command>import<command>
+			<command>from</command>
+		</keywords>
+	</language>-->
+</languages>
