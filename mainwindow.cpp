@@ -66,11 +66,11 @@ void MainWindow::SetupMenuBar() {
     fileMenu->addSeparator();
     fileMenu->addAction("Exit",       this, SLOT(CloseWindow()),   Qt::CTRL + Qt::Key_Q);
 
-    editMenu->addAction("Cut",        (QPlainTextEdit*)tabs->currentWidget(), SLOT(cut()),       Qt::CTRL + Qt::Key_X);
-    editMenu->addAction("Copy",       (QPlainTextEdit*)tabs->currentWidget(), SLOT(copy()),      Qt::CTRL + Qt::Key_C);
-    editMenu->addAction("Paste",      (QPlainTextEdit*)tabs->currentWidget(), SLOT(paste()),     Qt::CTRL + Qt::Key_V);
-    editMenu->addAction("Delete",     (QPlainTextEdit*)tabs->currentWidget(), SLOT(clear()),     Qt::CTRL + Qt::Key_Backspace);
-    editMenu->addAction("Select All", (QPlainTextEdit*)tabs->currentWidget(), SLOT(selectAll()), Qt::CTRL + Qt::Key_A);
+    editMenu->addAction("Cut",        this, SLOT(slotCut()),       Qt::CTRL + Qt::Key_X);
+    editMenu->addAction("Copy",       this, SLOT(slotCopy()),      Qt::CTRL + Qt::Key_C);
+    editMenu->addAction("Paste",      this, SLOT(slotPaste()),     Qt::CTRL + Qt::Key_V);
+    editMenu->addAction("Delete",     this, SLOT(slotClear()),     Qt::CTRL + Qt::Key_Backspace);
+    editMenu->addAction("Select All", this, SLOT(slotSelectAll()), Qt::CTRL + Qt::Key_A);
 
     file_explorer = viewMenu->addAction("File Explorer", this, SLOT(FileExplorerHandler()));
     openned_docs  = viewMenu->addAction("Openned Docs",  this, SLOT(OpennedDocsHandler()));
@@ -387,4 +387,24 @@ void MainWindow::UpdateCurrentIndex(int new_selection_index) {
 void MainWindow::UpdateCurrentIndexOnDelete(int) { // should be better?
     // (Relies on fact that after deletion current tab is always (count() - 1)th tab)
     openned_docs_widget->setCurrentRow(openned_docs_widget->count() - 1);
+}
+
+void MainWindow::slotCopy() {
+    ((CodeEditor*)tabs->currentWidget())->copy();
+}
+
+void MainWindow::slotCut() {
+    ((CodeEditor*)tabs->currentWidget())->cut();
+}
+
+void MainWindow::slotSelectAll() {
+    ((CodeEditor*)tabs->currentWidget())->selectAll();
+}
+
+void MainWindow::slotPaste() {
+    ((CodeEditor*)tabs->currentWidget())->paste();
+}
+
+void MainWindow::slotClear() {
+    ((CodeEditor*)tabs->currentWidget())->clear();
 }

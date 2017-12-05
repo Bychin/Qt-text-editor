@@ -96,7 +96,11 @@ private slots:
     void UpdateCurrentIndex(QListWidgetItem*);
     void UpdateCurrentIndexOnDelete(int);
 
-    // TODO: Drag'n Drop support! (from another program + from dock)
+    void slotCut();
+    void slotCopy();
+    void slotPaste();
+    void slotSelectAll();
+    void slotClear();
 };
 
 #endif // MAINWINDOW_H
