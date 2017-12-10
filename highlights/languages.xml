@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <languages>
-	<language extentions="(cpp|h|hpp|py)">
+	<language extentions="(cpp|h|hpp)">
 		<single_comment expression = "//[^\n]*"></single_comment>
 		<multiline_comment begin = "/\*" end = "\*/"></multiline_comment>
 		<keywords>
@@ -46,7 +46,7 @@
 			<keyword>bool</keyword>
 			<keyword>malloc</keyword>
 			<keyword>calloc</keyword>
-			<command>#define<command>
+			<command>#define</command>
 			<command>#elif</command>
 			<command>#else</command>
 			<command>#ifndef</command>
@@ -60,27 +60,37 @@
 			<command>#undef</command>
 			<command>#using</command>
 			<command>#endif</command>
-
-			<keyword>class</keyword>
-			<keyword>def</keyword>
-			<keyword>return</keyword>
-			<keyword>True</keyword>
-			<keyword>False</keyword>
-			<command>import<command>
-			<command>from</command>
 		</keywords>
 	</language>
-	<!--<language extentions="(py)">
+	<language extentions="py">
 		<single_comment expression = "#[^\n]*"></single_comment>
 		<multiline_comment begin = '"""' end = '"""'></multiline_comment>
 		<keywords>
 			<keyword>class</keyword>
 			<keyword>def</keyword>
 			<keyword>return</keyword>
-			<keyword>True</keyword>
+			<keyword>True </keyword>
 			<keyword>False</keyword>
-			<command>import<command>
+			<command>import</command>
 			<command>from</command>
 		</keywords>
-	</language>-->
+	</language>
+	<language extentions="scala">
+		<single_comment expression = "//[^\n]*"></single_comment>
+		<multiline_comment begin = "/\*" end = "\*/"></multiline_comment>
+		<keywords>
+			<keyword>class</keyword>
+			<keyword>def</keyword>
+			<keyword>return</keyword>
+			<keyword>true</keyword>
+			<keyword>false</keyword>
+			<keyword>implicit</keyword>
+			<keyword>package</keyword>
+			<keyword>import</keyword>
+			<keyword>val</keyword>
+			<keyword>var</keyword>
+			<keyword>extends</keyword>
+			<keyword>implements</keyword>
+		</keywords>
+	</language>
 </languages>
