@@ -30,7 +30,6 @@
 #include <QMimeData>
 #include <QList>
 #include <QUrl>
-#include <QDebug>
 
 #include "linenumberarea.h"
 #include "codeeditor.h"
@@ -47,9 +46,7 @@ class MainWindow : public QMainWindow {
 public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
-
-    bool eventFilter(QObject *watched, QEvent *event) override;
-
+    
 private:
     Ui::MainWindow *ui;
     QTabWidget* tabs;
