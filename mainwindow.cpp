@@ -104,9 +104,6 @@ void MainWindow::SetupFileExplorerDock() {
     file_explorer_dock->setFeatures(QDockWidget::DockWidgetClosable);
     file_explorer_dock->hide();
 
-    auto *filter = new EventFilterClose(this);
-    file_explorer_dock->installEventFilter(filter);
-
     addDockWidget(Qt::LeftDockWidgetArea, file_explorer_dock);
 }
 
