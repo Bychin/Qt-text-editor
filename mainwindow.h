@@ -30,6 +30,7 @@
 #include <QMimeData>
 #include <QList>
 #include <QUrl>
+#include <QDebug>
 
 #include "linenumberarea.h"
 #include "codeeditor.h"
@@ -47,6 +48,8 @@ public:
     explicit MainWindow(QWidget *parent = 0);
     ~MainWindow();
 
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
 private:
     Ui::MainWindow *ui;
     QTabWidget* tabs;
@@ -54,22 +57,20 @@ private:
 
     QDirModel* file_system_model;
     QTreeView* file_system_view;
-    QListWidget* openned_docs_widget;
+    QListWidget* opened_docs_widget;
 
     QDockWidget* file_explorer_dock;
-    QDockWidget* openned_docs_dock;
+    QDockWidget* opened_docs_dock;
 
     void dragEnterEvent(QDragEnterEvent* drag_event) override;
     void dropEvent(QDropEvent* drop_event) override;
 
-    QAction* file_explorer;
-    QAction* openned_docs;
 
     void SetupTabWidget();
     void SetupMenuBar();
     void SetupToolBar();
     void SetupFileExplorerDock();
-    void SetupOpennedDocsDock();
+    void SetupOpenedDocsDock();
     void closeEvent(QCloseEvent*) override;
 
 private slots:
@@ -87,8 +88,6 @@ private slots:
     void CloseAllFiles();
     void CloseWindow();
 
-    void FileExplorerHandler();
-    void OpennedDocsHandler();
 
     void ChangeTabIndexInList(int, int);
     void DeleteTabFromList(int);
@@ -102,5 +101,25 @@ private slots:
     void slotSelectAll();
     void slotClear();
 };
+
+
+class EventFilterClose : public QObject
+{
+Q_OBJECT
+public:
+    EventFilterClose( QObject* aParent ) : QObject(aParent){
+
+    }
+protected:
+    bool eventFilter(QObject *obj, QEvent *event){
+        if ( event->type() == QEvent::Close )
+        {
+            return true;
+        }
+        return QObject::eventFilter( obj, event );
+    }
+};
+
+
 
 #endif // MAINWINDOW_H
