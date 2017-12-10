@@ -110,15 +110,8 @@ void MainWindow::SetupFileExplorerDock() {
     addDockWidget(Qt::LeftDockWidgetArea, file_explorer_dock);
 }
 
-bool MainWindow::eventFilter(QObject *watched, QEvent *event) {
-
-
-    return QObject::eventFilter(watched, event);
-}
-
 void MainWindow::SetupOpenedDocsDock() {
     opened_docs_widget = new QListWidget;
-
 
     // update on opening/creating new file
     // delete on deleting tab provided by DeleteTabFromList(int) function
@@ -128,8 +121,6 @@ void MainWindow::SetupOpenedDocsDock() {
     connect(opened_docs_widget, SIGNAL(currentRowChanged(int)),        tabs, SLOT(setCurrentIndex(int)));
     connect(tabs->tabBar(),      SIGNAL(currentChanged(int)),           this, SLOT(UpdateCurrentIndex(int)));
     connect(tabs->tabBar(),      SIGNAL(tabCloseRequested(int)),        this, SLOT(UpdateCurrentIndexOnDelete(int)));
-
-    connect(opened_docs_widget, SIGNAL(currentRowChanged(int)),        tabs, SLOT(setCurrentIndex(int)));
 
     opened_docs_dock  = new QDockWidget("Opened files", this);
 
