@@ -5,9 +5,9 @@ set(CMAKE_CXX_STANDARD 11)
 
 set(SOURCE_FILES main.cpp codeeditor.cpp codeeditor.h highlighter.cpp highlighter.h linenumberarea.h mainwindow.cpp mainwindow.h mainwindow.ui)
 
-set(Qt5Core_DIR "/opt/Qt/5.9.3/gcc_64/lib/cmake/Qt5Core/")
-set(Qt5Widgets_DIR "/opt/Qt/5.9.3/gcc_64/lib/cmake/Qt5Widgets/")
-set(Qt5Console_DIR "/opt/Qt/5.9.3/gcc_64/lib/cmake/Qt5Console/")
+#set(Qt5Core_DIR "/opt/Qt/5.9.3/gcc_64/lib/cmake/Qt5Core/")
+#set(Qt5Widgets_DIR "/opt/Qt/5.9.3/gcc_64/lib/cmake/Qt5Widgets/")
+#set(Qt5Console_DIR "/opt/Qt/5.9.3/gcc_64/lib/cmake/Qt5Console/")
 
 
 SET(CMAKE_AUTOUIC ON)
