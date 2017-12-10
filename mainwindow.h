@@ -103,22 +103,6 @@ private slots:
 };
 
 
-class EventFilterClose : public QObject
-{
-Q_OBJECT
-public:
-    EventFilterClose( QObject* aParent ) : QObject(aParent){
-
-    }
-protected:
-    bool eventFilter(QObject *obj, QEvent *event){
-        if ( event->type() == QEvent::Close )
-        {
-            return true;
-        }
-        return QObject::eventFilter( obj, event );
-    }
-};
 
 
 
